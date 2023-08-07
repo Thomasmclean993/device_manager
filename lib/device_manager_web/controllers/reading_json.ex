@@ -1,5 +1,5 @@
 defmodule DeviceManagerWeb.ReadingJSON do
-  alias DeviceManager.Devices.Reading
+  alias DeviceManager.Reading
 
   @doc """
   Renders a list of readings.
