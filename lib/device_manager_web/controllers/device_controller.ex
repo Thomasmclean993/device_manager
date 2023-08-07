@@ -1,10 +1,10 @@
 defmodule DeviceManagerWeb.DeviceController do
   use DeviceManagerWeb, :controller
 
-  alias DeviceManager.Devices
+  alias DeviceManager.Device
   alias DeviceManager.DeviceDataStorage, as: DDS
   alias DeviceManager.Devices.Reading
-  alias DeviceManager.Validator
+  alias DeviceManagerWeb.ChangesetJSON
 
   action_fallback DeviceManagerWeb.FallbackController
 
@@ -14,13 +14,14 @@ defmodule DeviceManagerWeb.DeviceController do
   end
 
   def store(conn, params) do
-    with {:ok, valid_formated_request} <- Validator.validate_format(params),
-         {:ok, request_with_validated_data} <- Validator.validate_data(valid_formated_request),
-         {:ok, save_request} <- DDS.insert_list_of_devices(request_with_validated_data) do
-      json(conn, save_request)
+    validated_changeset = Device.changeset(%Device{}, params)
+
+    if validated_changeset.valid? do
+      DDS.add_data(params)
+      json(conn, params)
     else
-      error ->
-        error
+      %{errors: errors} = ChangesetJSON.error(%{changeset: validated_changeset})
+      {:error, :invalid_data}
     end
   end
 end

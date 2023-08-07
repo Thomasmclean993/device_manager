@@ -5,6 +5,7 @@ defmodule DeviceManager.DeviceTest do
   alias DeviceManager.Device
   alias DeviceManager.DevicesFixtures
   alias DeviceManager.Reading
+  alias DeviceManagerWeb.ChangesetJSON
 
   @consumer_request DevicesFixtures.device_fixture("valid_request.json") |> Jason.decode!()
   @missing_timestamp_request DevicesFixtures.device_fixture("missing_timestamp_request.json")
@@ -23,20 +24,22 @@ defmodule DeviceManager.DeviceTest do
     test " when missing timestamp field, return with an error message" do
       changeset = Device.changeset(%Device{}, @missing_timestamp_request)
 
-      assert %{readings: [%{timestamp: ["can't be blank"]}, %{timestamp: ["can't be blank"]}]} ==
-               changeset
+      assert false == changeset.valid?
+
+      assert %{errors: %{readings: [%{timestamp: ["can't be blank"]}, %{timestamp: ["can't be blank"]}]}} ==
+        ChangesetJSON.error(%{changeset: changeset})
     end
 
     test " when missing count field, return with an error message" do
       changeset = Device.changeset(%Device{}, @missing_count_request)
 
-      assert %{readings: [%{count: ["can't be blank"]}, %{count: ["can't be blank"]}]} ==
-               changeset
+      assert %{errors: %{readings: [%{count: ["can't be blank"]}, %{count: ["can't be blank"]}]}} ==
+        ChangesetJSON.error(%{changeset: changeset})
     end
 
     test " when missing id field, return with an error message" do
       changeset = Device.changeset(%Device{}, @missing_id_request)
-      assert %{id: ["can't be blank"]} == changeset
+      assert %{errors: %{id: ["can't be blank"]}} == ChangesetJSON.error(%{changeset: changeset})
     end
   end
 end

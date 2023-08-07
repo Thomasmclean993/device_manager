@@ -13,14 +13,6 @@ defmodule DeviceManager.Device do
 
   @uuid_regex ~r/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 
-  def struct_to_map(changeset) do
-    if changeset.valid? do
-      Map.from_struct(changeset)
-    else
-      changeset.errors
-    end
-  end
-
   @doc false
 
   def changeset(device, %{id: id, readings: _readings} = attrs) do
@@ -40,10 +32,9 @@ defmodule DeviceManager.Device do
     |> cast_assoc(:readings, required: true)
     |> validate_required([:id, :readings])
     |> validate_format(:id, @uuid_regex)
-    |> fetch_errors()
   end
 
-  def valid_id(attrs) do
+  defp valid_id(attrs) do
     if Map.has_key?(attrs, "id") do
       attrs["id"]
     else
@@ -51,7 +42,7 @@ defmodule DeviceManager.Device do
     end
   end
 
-  defp fetch_errors(changeset) do
+  def fetch_errors(changeset) do
     if changeset.valid? do
       changeset
     else

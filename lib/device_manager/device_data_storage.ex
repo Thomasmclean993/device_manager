@@ -41,15 +41,13 @@ defmodule DeviceManager.DeviceDataStorage do
 
   def handle_call({:get_device_data, device_id}, _from, state) do
     find_single_device(state, device_id)
-
   end
 
   def handle_cast({:reset_state}, state) do
     {:noreply, []}
   end
 
-    def find_single_device(data, id) do
-      Enum.map(data, fn %{id: map_id, readings: _readings} -> id == map_id end)
-    end
-
+  def find_single_device(data, id) do
+    Enum.map(data, fn %{id: map_id, readings: _readings} -> id == map_id end)
+  end
 end
