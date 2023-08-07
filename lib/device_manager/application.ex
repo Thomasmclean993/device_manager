@@ -17,9 +17,10 @@ defmodule DeviceManager.Application do
       # Start Finch
       {Finch, name: DeviceManager.Finch},
       # Start the Endpoint (http/https)
-      DeviceManagerWeb.Endpoint
+      DeviceManagerWeb.Endpoint,
       # Start a worker by calling: DeviceManager.Worker.start_link(arg)
       # {DeviceManager.Worker, arg}
+      {DeviceManager.DeviceDataStorage, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

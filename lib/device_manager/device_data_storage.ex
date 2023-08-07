@@ -1,46 +1,55 @@
 defmodule DeviceManager.DeviceDataStorage do
-  alias DeviceManager.Data
+  use GenServer
 
-  @device_storage []
-  @uuid_regex ~r/\A[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\z/
-  @timestamp_regex ~r/\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})?/
-
-  def insert_list_of_devices(data) do
-    combined_data =
-      data
-      |> Enum.group_by(fn x -> x.id end)
-      |> Enum.map(fn {_id, maps} ->
-        %{id: hd(maps).id, readings: Enum.flat_map(maps, fn x -> x.readings end)}
-      end)
-
-    @device_storage ++ combined_data
+  def start_link(opts \\ []) do
+    GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
-  def validate_data(list_of_devices) when is_list(list_of_devices) do
-    list_of_devices
-    |> Enum.map(fn device -> validate_data(device) end)
-    |> Enum.all?()
+  def add_data(data) when is_list(data) do
+    Enum.map(data, fn single_device -> add_data(single_device) end)
   end
 
-  def validate_data(%{id: id, readings: readings}) do
-    validate_id(id) and validate_readings(readings)
-  end
-
-  def validate_id(id) do
-    Regex.match?(@uuid_regex, id)
-  end
-
-  def validate_readings(readings) when is_list(readings) do
-    readings
-    |> Enum.map(fn reading -> validate_readings(reading) end)
-    |> Enum.all?()
-  end
-
-  def validate_readings(%{count: count, timestamp: timestamp}) do
-    is_integer(count) and Regex.match?(@timestamp_regex, timestamp)
+  def add_data(data) when is_map(data) do
+    IO
+    GenServer.call(__MODULE__, {:add_devices, data})
   end
 
   def fetch_all_data do
-    @device_storage
+    GenServer.call(__MODULE__, :get_devices)
   end
+
+  def retrieve_devices_data(device_id) do
+    GenServer.call(__MODULE__, {:get_device_data, device_id})
+  end
+
+  def reset_state(server_pid) do
+    GenServer.cast(server_pid, {:reset_state})
+  end
+
+  def init(state) do
+    {:ok, state}
+  end
+
+  def handle_call({:add_devices, data}, _from, state) do
+    new_state = state ++ [data]
+    {:reply, :ok, new_state}
+  end
+
+  def handle_call(:get_devices, _from, state) do
+    {:reply, state, state}
+  end
+
+  def handle_call({:get_device_data, device_id}, _from, state) do
+    find_single_device(state, device_id)
+
+  end
+
+  def handle_cast({:reset_state}, state) do
+    {:noreply, []}
+  end
+
+    def find_single_device(data, id) do
+      Enum.map(data, fn %{id: map_id, readings: _readings} -> id == map_id end)
+    end
+
 end
