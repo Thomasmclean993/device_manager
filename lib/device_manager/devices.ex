@@ -6,7 +6,7 @@ defmodule DeviceManager.Devices do
   import Ecto.Query, warn: false
   alias DeviceManager.Repo
 
-  alias DeviceManager.Devices.Reading
+  alias DeviceManager.Reading
 
   @doc """
   Returns the list of readings.

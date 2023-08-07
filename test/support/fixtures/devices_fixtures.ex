@@ -7,15 +7,8 @@ defmodule DeviceManager.DevicesFixtures do
   @doc """
   Generate a reading.
   """
-  def reading_fixture(attrs \\ %{}) do
-    {:ok, reading} =
-      attrs
-      |> Enum.into(%{
-        count: 42,
-        timestamp: ~U[2023-08-04 18:41:00Z]
-      })
-      |> DeviceManager.Devices.create_reading()
-
-    reading
+  def device_fixture(file_name) do
+    {:ok, file} = File.read("test/support/fixtures/#{file_name}")
+    file
   end
 end
