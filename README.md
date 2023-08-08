@@ -29,8 +29,11 @@ This endpoint accepts reading data from field devices and stores it. The data mu
  * Duplicate data for a specific field device will not be recorded
  * Incomplete or malformed data will result in an error
 
-``` json
-{ 
+```
+curl --location 'localhost:4000/api/store?=null' \
+--header 'Content-Type: application/json' \
+--header 'content_type: application/json' \
+--data '{ 
 "id": "36d5658a-6908-479e-887e-a949ec199272", 
 "readings": [{ 
 "timestamp": "2021-09-29T16:08:15+01:00", 
@@ -39,7 +42,7 @@ This endpoint accepts reading data from field devices and stores it. The data mu
 "timestamp": "2021-09-29T16:09:15+01:00", 
 "count": 15 
 }] 
-}
+}'
 ```
 
 ### /api/readings/:id
