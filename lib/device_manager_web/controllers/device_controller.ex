@@ -41,7 +41,6 @@ defmodule DeviceManagerWeb.DeviceController do
       false -> {:error, :invalid_data}
       {:error, :duplicate_data, _} -> {:error, :duplicate_data}
       errors -> errors
-
     end
   end
 
