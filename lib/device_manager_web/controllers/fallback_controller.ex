@@ -28,4 +28,11 @@ defmodule DeviceManagerWeb.FallbackController do
     |> put_view(json: DeviceManagerWeb.ErrorJSON)
     |> render(:"400")
   end
+
+  def call(conn, {:error, :invalid_format}) do
+    conn
+    |> put_status(:bad_request)
+    |> put_view(json: DeviceManagerWeb.ErrorJSON)
+    |> render(:"400")
+  end
 end

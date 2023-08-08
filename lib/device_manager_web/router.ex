@@ -23,6 +23,7 @@ defmodule DeviceManagerWeb.Router do
   scope "/api", DeviceManagerWeb do
     pipe_through :api
 
+    get "/show", DeviceController, :show
     post "/store", DeviceController, :store
   end
 
