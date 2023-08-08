@@ -13,6 +13,14 @@ defmodule DeviceManagerWeb.DeviceJSON do
     data(device)
   end
 
+  def not_found(device) do
+    %{
+      "errors": %{
+          "detail": "Device not found"
+      }
+  }
+  end
+
   defp data(%{data: %{"id" => _id, "readings" => readings}}) do
     %{
       readings: readings
