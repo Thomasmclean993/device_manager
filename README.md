@@ -30,7 +30,7 @@ This endpoint accepts reading data from field devices and stores it. The data mu
  * Incomplete or malformed data will result in an error
 
 ```
-curl --location 'localhost:4000/api/store?=null' \
+curl --location 'localhost:4000/api/store?' \
 --header 'Content-Type: application/json' \
 --header 'content_type: application/json' \
 --data '{ 
