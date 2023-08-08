@@ -6,6 +6,9 @@ defmodule DeviceManagerWeb.DeviceController do
 
   action_fallback DeviceManagerWeb.FallbackController
 
+  @doc """
+    The show/2 function is to retrieve and display data for a specific device using an unique id.
+  """
   def show(conn, %{"id" => id}) do
     data = DDS.retrieve_devices_data(id)
 
@@ -21,6 +24,11 @@ defmodule DeviceManagerWeb.DeviceController do
         |> render("show.json", data: data)
     end
   end
+
+  @doc """
+    The store/2 function is responsible for storing data for a device.
+    Possible errors
+  """
 
   def store(conn, %{"id" => _id, "readings" => _reading} = params) do
     with validated_changeset = Device.changeset(%Device{}, params),

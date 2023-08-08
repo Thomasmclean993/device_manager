@@ -3,7 +3,7 @@ defmodule DeviceManager.DeviceDataStorageTest do
   use ExUnit.Case
   alias DeviceManager.DeviceDataStorage, as: DDS
 
-  # Start the GenServer before running each test.
+  # will start the genserver before test suite is started.
   setup do
     start_fresh_state()
   end

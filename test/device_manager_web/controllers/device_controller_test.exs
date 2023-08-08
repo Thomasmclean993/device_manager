@@ -22,7 +22,8 @@ defmodule DeviceManagerWeb.DeviceControllerTest do
         ]
       })
 
-      DDS.retrieve_devices_data("6e74a46c-dc4f-4f38-9741-b12b526ea0c9")
+      %{"id" => _id, "readings" => _readings} =
+        DDS.retrieve_devices_data("6e74a46c-dc4f-4f38-9741-b12b526ea0c9")
     end
 
     test "returns not found when data is not found" do
@@ -36,20 +37,12 @@ defmodule DeviceManagerWeb.DeviceControllerTest do
     end
 
     test "returns a successful response when data is found" do
-      DDS.add_data(%{
-        "id" => "6e74a46c-dc4f-4f38-9741-b12b526ea0c9",
-        "readings" => [
-          %{"count" => 5, "timestamp" => "2015-01-06T10:10:10"},
-          %{"count" => 5, "timestamp" => "2015-01-06T10:10:10"}
-        ]
-      })
-
       response =
         build_conn()
         |> put_req_header("content-type", "application/json")
         |> get("/api/readings", %{"id" => "6e74a46c-dc4f-4f38-9741-b12b526ea0c9"})
 
-        assert response.status == 200
+      assert response.status == 200
 
       assert response.resp_body ==
                "{\"readings\":[{\"count\":5,\"timestamp\":\"2015-01-06T10:10:10\"},{\"count\":5,\"timestamp\":\"2015-01-06T10:10:10\"}]}"

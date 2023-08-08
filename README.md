@@ -82,6 +82,7 @@ I would refactor the Genserver:
 * Test Coverage can be improved
 * Naming Conventions
 * Better Error Messages (etc, request structure is malformed, sent a error message explaining that)
+* Adding typespecs 
 ## Learn more
 
   * Official website: https://www.phoenixframework.org/
