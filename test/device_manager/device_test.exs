@@ -4,7 +4,6 @@ defmodule DeviceManager.DeviceTest do
 
   alias DeviceManager.Device
   alias DeviceManager.DevicesFixtures
-  alias DeviceManager.Reading
   alias DeviceManagerWeb.ChangesetJSON
 
   @consumer_request DevicesFixtures.device_fixture("valid_request.json") |> Jason.decode!()
