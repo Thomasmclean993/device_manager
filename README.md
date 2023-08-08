@@ -30,11 +30,10 @@ This endpoint accepts reading data from field devices and stores it. The data mu
  * Incomplete or malformed data will result in an error
 
 ```
-curl --location 'localhost:4000/api/store?' \
+curl --location --request POST 'localhost:4000/api/store' \
 --header 'Content-Type: application/json' \
---header 'content_type: application/json' \
---data '{ 
-"id": "36d5658a-6908-479e-887e-a949ec199272", 
+--data-raw '{ 
+"id": "36d5658a-6908-479e-887e-a949ec199276", 
 "readings": [{ 
 "timestamp": "2021-09-29T16:08:15+01:00", 
 "count": 2 
