@@ -26,15 +26,19 @@ defmodule DeviceManager.DeviceTest do
 
       assert false == changeset.valid?
 
-      assert %{errors: %{readings: [%{timestamp: ["can't be blank"]}, %{timestamp: ["can't be blank"]}]}} ==
-        ChangesetJSON.error(%{changeset: changeset})
+      assert %{
+               errors: %{
+                 readings: [%{timestamp: ["can't be blank"]}, %{timestamp: ["can't be blank"]}]
+               }
+             } ==
+               ChangesetJSON.error(%{changeset: changeset})
     end
 
     test " when missing count field, return with an error message" do
       changeset = Device.changeset(%Device{}, @missing_count_request)
 
       assert %{errors: %{readings: [%{count: ["can't be blank"]}, %{count: ["can't be blank"]}]}} ==
-        ChangesetJSON.error(%{changeset: changeset})
+               ChangesetJSON.error(%{changeset: changeset})
     end
 
     test " when missing id field, return with an error message" do

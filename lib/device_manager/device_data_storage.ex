@@ -10,7 +10,6 @@ defmodule DeviceManager.DeviceDataStorage do
   end
 
   def add_data(data) when is_map(data) do
-    IO
     GenServer.call(__MODULE__, {:add_devices, data})
   end
 
@@ -31,8 +30,14 @@ defmodule DeviceManager.DeviceDataStorage do
   end
 
   def handle_call({:add_devices, data}, _from, state) do
-    new_state = state ++ [data]
-    {:reply, :ok, new_state}
+    case find_duplicate(data, state) do
+      nil ->
+        new_state = state ++ [data]
+        {:reply, :ok, new_state}
+
+      duplicate_data ->
+        {:reply, {:error, :duplicate_data, duplicate_data}, state}
+    end
   end
 
   def handle_call(:get_devices, _from, state) do
@@ -40,14 +45,34 @@ defmodule DeviceManager.DeviceDataStorage do
   end
 
   def handle_call({:get_device_data, device_id}, _from, state) do
-    find_single_device(state, device_id)
+    data = find_single_device(state, device_id)
+
+    {:reply, data, state}
   end
 
-  def handle_cast({:reset_state}, state) do
+  def handle_cast({:reset_state}, _state) do
     {:noreply, []}
   end
 
-  def find_single_device(data, id) do
-    Enum.map(data, fn %{id: map_id, readings: _readings} -> id == map_id end)
+  defp find_duplicate(new_data, state) do
+    Enum.find(state, fn existing_data ->
+      existing_id = Map.get(existing_data, "id")
+      existing_readings = Map.get(existing_data, "readings")
+
+      new_id = Map.get(new_data, "id")
+      new_readings = Map.get(new_data, "readings")
+
+      if existing_id == new_id && existing_readings == new_readings do
+        existing_data
+      else
+        nil
+      end
+    end)
+  end
+
+  defp find_single_device(data, id) do
+    Enum.find(data, {:error, :not_found}, fn %{"id" => map_id, "readings" => _readings} ->
+      map_id == id
+    end)
   end
 end

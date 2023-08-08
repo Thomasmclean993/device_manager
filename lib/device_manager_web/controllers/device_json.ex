@@ -11,14 +11,13 @@ defmodule DeviceManagerWeb.DeviceJSON do
   @doc """
   Renders a single device.
   """
-  def show(%{device: device}) do
-    %{data: data(device)}
+  def show(device) do
+    data(device)
   end
 
-  defp data(%device{} = device) do
+  defp data(%{data: %{"id" => _id, "readings" => readings}}) do
     %{
-      id: device.id,
-      readings: device.readings
+      readings: readings
     }
   end
 end
