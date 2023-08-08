@@ -25,8 +25,8 @@ defmodule DeviceManager.Device do
     device
     |> cast(attrs, [])
     |> convert_id_to_identifier(id)
-    |> cast_assoc(:readings, required: true)
-    |> validate_required([:id, :readings])
+    |> cast_assoc(:readings, [required: true])
+    |> validate_required([:id])
     |> validate_format(:id, @uuid_regex)
   end
 

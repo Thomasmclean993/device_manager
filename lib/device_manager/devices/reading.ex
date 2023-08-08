@@ -16,7 +16,7 @@ defmodule DeviceManager.Reading do
   def changeset(reading, attrs) do
     reading
     |> cast(attrs, [:timestamp, :count])
-    |> validate_required([:timestamp, :count], required: true)
+    |> validate_required([:timestamp, :count])
     |> assoc_constraint(:device)
     |> validate_number(:count, message: "must be a number")
     |> validate_format(:timestamp, @timestamp_regex)
