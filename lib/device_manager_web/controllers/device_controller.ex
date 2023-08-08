@@ -13,7 +13,7 @@ defmodule DeviceManagerWeb.DeviceController do
     data = DDS.retrieve_devices_data(id)
 
     case data do
-      nil ->
+      {:error, :not_found} ->
         conn
         |> put_status(:not_found)
         |> render("not_found.json")
@@ -24,6 +24,8 @@ defmodule DeviceManagerWeb.DeviceController do
         |> render("show.json", data: data)
     end
   end
+
+  def show(_conn, _parma), do: {:error, :invalid}
 
   @doc """
     The store/2 function is responsible for storing data for a device.
@@ -36,7 +38,10 @@ defmodule DeviceManagerWeb.DeviceController do
          :ok <- DDS.add_data(params) do
       json(conn, params)
     else
+      false -> {:error, :invalid_data}
+      {:error, :duplicate_data, _} -> {:error, :duplicate_data}
       errors -> errors
+
     end
   end
 

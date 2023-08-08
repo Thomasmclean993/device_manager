@@ -36,6 +36,13 @@ defmodule DeviceManagerWeb.FallbackController do
     |> render(:"400")
   end
 
+  def call(conn, {:error, :duplicate_data}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(json: DeviceManagerWeb.ErrorJSON)
+    |> render(:"422")
+  end
+
   def call(conn, _error_tuple) do
     conn
     |> put_status(:not_implemented)
