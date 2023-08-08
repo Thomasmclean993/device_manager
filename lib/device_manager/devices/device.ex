@@ -2,6 +2,13 @@ defmodule DeviceManager.Device do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @moduledoc """
+    Changesets  are essential for validating data, create a place to run a list of operations before saving.
+    Some operations can include requiring fields, validating data types and performing transformations to the data.
+    Also, allows to expland you error handling for incoming or outgoing params.
+    Schema: Define the structure of your data while setting expected data types.
+  """
+
   schema "device" do
     has_many :readings, DeviceManager.Reading
 

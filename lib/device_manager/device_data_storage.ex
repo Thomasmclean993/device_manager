@@ -1,6 +1,20 @@
 defmodule DeviceManager.DeviceDataStorage do
   use GenServer
 
+  @moduledoc """
+    This module manages the storage and retrieval of device data using a GenServer. GenServer rely on callback functions
+
+    THe module provides functions the add , fetch and retrieve device data. When adding data, it prevents duplicate data to be inserted as well.
+  Usage:
+    - start_link/1 to start the GenServer process.
+    - add_data/1 to add device data, preventing duplicates.
+    - fetch_all_data/0 to retrieve all stored device data.
+    - retrieve_devices_data/1 to retrieve data for a specific device ID.
+    - reset_state/1 to reset the GenServer state.
+
+  """
+
+  # Api functionality
   def start_link(opts \\ []) do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
@@ -35,6 +49,7 @@ defmodule DeviceManager.DeviceDataStorage do
     {:ok, state}
   end
 
+  # Server functionality
   def handle_call({:add_devices, data}, _from, state) do
     case find_duplicate(data, state) do
       nil ->
