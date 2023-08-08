@@ -28,20 +28,18 @@ This endpoint accepts reading data from field devices and stores it. The data mu
  * Readings fields are required but can by out of order
  * Duplicate data for a specific field device will not be recorded
  * Incomplete or malformed data will result in an error
-```
- curl --location 'localhost:4000/api/store?=null' \
---header 'Content-Type: application/json' \
---header 'content_type: application/json' \
---data '{ 
+
+``` json
+{ 
 "id": "36d5658a-6908-479e-887e-a949ec199272", 
 "readings": [{ 
-"count": 5 ,
-"timestamp": "1021-09-29T16:09:15+01:06"
+"timestamp": "2021-09-29T16:08:15+01:00", 
+"count": 2 
 }, { 
-"count": 15 ,
-"timestamp": "2021-09-29T16:09:15+01:00" 
+"timestamp": "2021-09-29T16:09:15+01:00", 
+"count": 15 
 }] 
-}'
+}
 ```
 
 ### /api/readings/:id

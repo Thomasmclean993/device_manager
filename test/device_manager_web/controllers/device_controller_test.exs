@@ -29,7 +29,7 @@ defmodule DeviceManagerWeb.DeviceControllerTest do
       response =
         build_conn()
         |> put_req_header("content-type", "application/json")
-        |> post("/api/show", %{"id" => @not_found_id})
+        |> post("/api/readings", %{"id" => @not_found_id})
 
       assert response.status == 404
       assert response.resp_body == "Not Found"
@@ -47,10 +47,9 @@ defmodule DeviceManagerWeb.DeviceControllerTest do
       response =
         build_conn()
         |> put_req_header("content-type", "application/json")
-        |> get("/api/show", %{"id" => "6e74a46c-dc4f-4f38-9741-b12b526ea0c9"})
+        |> get("/api/readings", %{"id" => "6e74a46c-dc4f-4f38-9741-b12b526ea0c9"})
 
-      # assert :ok == DDS.retrieve_devices_data("6e74a46c-dc4f-4f38-9741-b12b526ea0c9")
-      assert response.status == 200
+        assert response.status == 200
 
       assert response.resp_body ==
                "{\"readings\":[{\"count\":5,\"timestamp\":\"2015-01-06T10:10:10\"},{\"count\":5,\"timestamp\":\"2015-01-06T10:10:10\"}]}"
