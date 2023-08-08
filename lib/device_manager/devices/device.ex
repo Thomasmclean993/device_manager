@@ -2,9 +2,6 @@ defmodule DeviceManager.Device do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias DeviceManager.Reading
-  alias DeviceManager.Utils
-
   schema "device" do
     has_many :readings, DeviceManager.Reading
 
@@ -14,14 +11,6 @@ defmodule DeviceManager.Device do
   @uuid_regex ~r/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 
   @doc false
-
-  def changeset(device, %{id: id, readings: _readings} = attrs) do
-    if id == nil do
-      %{device: [%{id: ["can't be blank"]}]}
-    else
-      changeset(device, attrs)
-    end
-  end
 
   def changeset(device, attrs) do
     id = valid_id(attrs)
@@ -46,7 +35,7 @@ defmodule DeviceManager.Device do
     if changeset.valid? do
       changeset
     else
-      traverse_errors(changeset, fn {msg, opts} -> msg end)
+      traverse_errors(changeset, fn {msg, _opts} -> msg end)
     end
   end
 

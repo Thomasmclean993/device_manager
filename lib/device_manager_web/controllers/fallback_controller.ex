@@ -35,4 +35,11 @@ defmodule DeviceManagerWeb.FallbackController do
     |> put_view(json: DeviceManagerWeb.ErrorJSON)
     |> render(:"400")
   end
+
+  def call(conn, _error_tuple) do
+    conn
+    |> put_status(:not_implemented)
+    |> put_view(json: DeviceManagerWeb.ErrorJSON)
+    |> render(:"501")
+  end
 end

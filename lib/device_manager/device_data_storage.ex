@@ -6,7 +6,13 @@ defmodule DeviceManager.DeviceDataStorage do
   end
 
   def add_data(data) when is_list(data) do
-    Enum.map(data, fn single_device -> add_data(single_device) end)
+    results = Enum.map(data, fn single_device -> add_data(single_device) end)
+
+    if Enum.all?(results, fn result -> result == :ok end) do
+      :ok
+    else
+      Enum.reject(results, fn result -> result == :ok end)
+    end
   end
 
   def add_data(data) when is_map(data) do

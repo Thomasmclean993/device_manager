@@ -1,6 +1,4 @@
 defmodule DeviceManagerWeb.DeviceJSON do
-  alias DeviceManager.Device
-
   @doc """
   Renders a list of devices.
   """

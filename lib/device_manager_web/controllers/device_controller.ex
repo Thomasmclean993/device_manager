@@ -3,13 +3,11 @@ defmodule DeviceManagerWeb.DeviceController do
 
   alias DeviceManager.Device
   alias DeviceManager.DeviceDataStorage, as: DDS
-  alias DeviceManager.Devices.Reading
-  alias DeviceManagerWeb.ChangesetJSON
 
   action_fallback DeviceManagerWeb.FallbackController
 
   def show(conn, %{"id" => id}) do
-    data = DDS.retrieve_devices_data(id) |> IO.inspect()
+    data = DDS.retrieve_devices_data(id)
 
     case data do
       nil ->
@@ -24,18 +22,15 @@ defmodule DeviceManagerWeb.DeviceController do
     end
   end
 
-  def store(conn, %{"id" => id, "readings" => reading} = params) do
-    IO.inspect(params)
-    validated_changeset = Device.changeset(%Device{}, params)
-
-    if validated_changeset.valid? do
-      DDS.add_data(params)
+  def store(conn, %{"id" => _id, "readings" => _reading} = params) do
+    with validated_changeset = Device.changeset(%Device{}, params),
+         true <- validated_changeset.valid?,
+         :ok <- DDS.add_data(params) do
       json(conn, params)
     else
-      %{errors: errors} = ChangesetJSON.error(%{changeset: validated_changeset})
-      {:error, :invalid_data}
+      errors -> errors
     end
   end
 
-  def store(conn, _params), do: {:error, :invalid_format}
+  def store(_conn, _params), do: {:error, :invalid_format}
 end

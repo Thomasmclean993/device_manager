@@ -3,15 +3,12 @@ defmodule DeviceManagerWeb.DeviceControllerTest do
   use ExUnit.Case, async: true
 
   import Plug.Conn
-  import DeviceManager.DevicesFixtures
 
-  alias DeviceManager.Devices.Reading
   alias DeviceManager.DevicesFixtures
   alias DeviceManager.DeviceDataStorage, as: DDS
-  alias DeviceManagerWeb.DeviceController
-  alias DeviceManagerWeb.Router
 
   @consumer_request DevicesFixtures.device_fixture("valid_request.json")
+  @duplication_request DevicesFixtures.device_fixture("duplication_request.json")
   @invalid_request %{count: "I'm the count", timestamp: nil} |> Jason.encode!()
   @not_found_id "e62b6a99-08a9-4c5b-82c8-a2d5956a57b4"
 
@@ -74,6 +71,34 @@ defmodule DeviceManagerWeb.DeviceControllerTest do
                "readings" => [
                  %{"count" => 2, "timestamp" => "2021-09-29T16:08:15+01:00"},
                  %{"count" => 15, "timestamp" => "2021-09-29T16:09:15+01:00"}
+               ]
+             }
+    end
+
+    test "returns a bad_request when duplicate data is found" do
+      response =
+        build_conn()
+        |> put_req_header("content-type", "application/json")
+        |> post("/api/store", @duplication_request)
+
+      assert response.status == 400
+
+      assert response.body_params == %{
+               "_json" => [
+                 %{
+                   "id" => "36d5658a-6908-479e-887e-a949ec199272",
+                   "readings" => [
+                     %{"count" => 2, "timestamp" => "2021-09-29T16:08:15+01:00"},
+                     %{"count" => 15, "timestamp" => "2021-09-29T16:09:15+01:00"}
+                   ]
+                 },
+                 %{
+                   "id" => "36d5658a-6908-479e-887e-a949ec199272",
+                   "readings" => [
+                     %{"count" => 2, "timestamp" => "2021-09-29T16:08:15+01:00"},
+                     %{"count" => 15, "timestamp" => "2021-09-29T16:09:15+01:00"}
+                   ]
+                 }
                ]
              }
     end

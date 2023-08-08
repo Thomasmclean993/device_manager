@@ -20,13 +20,13 @@ defmodule DeviceManager.DeviceDataStorageTest do
   ]
 
   describe "add_data/1" do
-    test "add_data/1 with valid data", %{pid: pid} do
-      assert [:ok, :ok] == DeviceManager.DeviceDataStorage.add_data(@valid_request)
+    test "add_data/1 with valid data" do
+      assert :ok == DeviceManager.DeviceDataStorage.add_data(@valid_request)
       state = DeviceManager.DeviceDataStorage.fetch_all_data()
       assert length(state) == 2
     end
 
-    test "add_data/1 with duplicate data", %{pid: pid} do
+    test "add_data/1 with duplicate data" do
       data = [
         %{
           "id" => "device_id_1",
@@ -38,7 +38,14 @@ defmodule DeviceManager.DeviceDataStorageTest do
         }
       ]
 
-      assert [:ok, {:error, :duplicate_data, %{"id" => "device_id_1", "readings" => [%{"count" => 1, "timestamp" => "2023-07-30T12:00:00Z"}]}}] = DeviceManager.DeviceDataStorage.add_data(data)
+      assert [
+               {:error, :duplicate_data,
+                %{
+                  "id" => "device_id_1",
+                  "readings" => [%{"count" => 1, "timestamp" => "2023-07-30T12:00:00Z"}]
+                }}
+             ] = DeviceManager.DeviceDataStorage.add_data(data)
+
       state = DeviceManager.DeviceDataStorage.fetch_all_data()
       assert length(state) == 1
     end
@@ -52,7 +59,7 @@ defmodule DeviceManager.DeviceDataStorageTest do
   end
 
   describe "retrieve_devices_data/1" do
-    test "retrieve_devices_data/1 with existing device_id", %{pid: pid} do
+    test "retrieve_devices_data/1 with existing device_id" do
       data = [
         %{
           "id" => "device_id_1",
@@ -64,7 +71,7 @@ defmodule DeviceManager.DeviceDataStorageTest do
         }
       ]
 
-      assert [:ok, :ok] == DeviceManager.DeviceDataStorage.add_data(data)
+      assert :ok == DeviceManager.DeviceDataStorage.add_data(data)
       assert device_data = DeviceManager.DeviceDataStorage.retrieve_devices_data("device_id_1")
 
       assert device_data == %{
@@ -92,7 +99,7 @@ defmodule DeviceManager.DeviceDataStorageTest do
         }
       ]
 
-      assert [:ok, :ok] = DeviceManager.DeviceDataStorage.add_data(data)
+      assert :ok = DeviceManager.DeviceDataStorage.add_data(data)
       assert data == DeviceManager.DeviceDataStorage.fetch_all_data()
 
       assert :ok == DeviceManager.DeviceDataStorage.reset_state(pid)
