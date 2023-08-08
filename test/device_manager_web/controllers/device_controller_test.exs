@@ -102,7 +102,7 @@ defmodule DeviceManagerWeb.DeviceControllerTest do
         |> post("/api/store", @invalid_request)
 
       assert response.status == 400
-      assert response.resp_body =~ "{\"errors\":{\"detail\":\"Bad Request\"}}"
+      assert response.resp_body =~ "{\"errors\":{\"detail\":\"Request is in a invalid format\"}}"
     end
   end
 end
