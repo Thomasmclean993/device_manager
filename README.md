@@ -2,7 +2,7 @@
 The Field Device Data Management API is a comprehensive solution for recording, storing, and retrieving data from field devices over the internet. This API provides seamless data management capabilities to efficiently manage and monitor field device readings.
 
 ## Prerequisites
- * Elixir (v1.12 or later)
+ * Elixir (v1.14 or later)
  * Phoenix Framework (v1.6 or later)
 
 ## Installation/Start up
